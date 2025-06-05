@@ -7,7 +7,7 @@ import sys
 print(sys.executable)
 np.random.seed(42)
 
-# --- Monte Carlo Sampling Function using truncated normal ---
+# Monte Carlo Sampling Function using truncated normal 
 def sample_trunc_normal(mean, std_frac=0.25, size=10000):
     std_dev = mean * std_frac
     lower, upper = 1, np.inf
@@ -15,7 +15,7 @@ def sample_trunc_normal(mean, std_frac=0.25, size=10000):
     samples = truncnorm.rvs(a, b, loc=mean, scale=std_dev, size=size)
     return samples
 
-# --- Input Parameters for Si and GaAs Configurations (Corrected) ---
+#  Input Parameters for Si and GaAs Configurations 
 starship_si = {
     "energy_output": 469_588_240_000,
     "launch_emissions": 779_976_500,
@@ -38,7 +38,7 @@ falcon9_gaas = falcon9_si.copy()
 falcon9_gaas["launch_emissions"] = 1_473_844_037
 falcon9_gaas["satellite_emissions"] = 221_113_832
 
-# --- Monte Carlo Simulation Function ---
+# Monte Carlo Simulation Function 
 def run_monte_carlo(params):
     energy_samples = sample_trunc_normal(params["energy_output"])
     launch_emissions_samples = sample_trunc_normal(params["launch_emissions"])
@@ -54,7 +54,7 @@ def run_monte_carlo(params):
     emissions_g_per_kWh = (total_emissions_samples / energy_samples) * 1000
     return emissions_g_per_kWh
 
-# --- Summary Statistics Function ---
+#  Summary Statistics Function 
 def summarize(data):
     return {
         "mean": np.mean(data),
@@ -64,7 +64,7 @@ def summarize(data):
         "std": np.std(data)
     }
 
-# --- Run Simulations ---
+# Run Simulations 
 results = {
     "Starship (Si)": run_monte_carlo(starship_si),
     "Starship (GaAs)": run_monte_carlo(starship_gaas),
@@ -74,13 +74,13 @@ results = {
 
 summaries = {k: summarize(v) for k, v in results.items()}
 
-# --- Print Results ---
+# Print Results 
 for name, summary in summaries.items():
     print(f"\n{name} Monte Carlo: Emissions per kWh (g CO₂e)")
     for k, v in summary.items():
         print(f"  {k.replace('_', ' ').capitalize()}: {v:.2f}")
 
-# --- Plotting: STARSHIP ---
+# Plotting: STARSHIP 
 fig_starship, axs = plt.subplots(1, 2, figsize=(14, 5))
 colors = ['skyblue', 'navy']
 starship_keys = ["Starship (Si)", "Starship (GaAs)"]
@@ -100,7 +100,7 @@ fig_starship.suptitle("Starship Monte Carlo Simulations", fontsize=16)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
 
-# --- Plotting: FALCON 9 ---
+#  Plotting: FALCON 9 
 fig_falcon9, axs = plt.subplots(1, 2, figsize=(14, 5))
 colors = ['orange', 'darkred']
 falcon_keys = ["Falcon9 (Si)", "Falcon9 (GaAs)"]
